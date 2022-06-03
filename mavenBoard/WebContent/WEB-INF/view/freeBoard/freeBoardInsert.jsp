@@ -13,6 +13,63 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.js"></script>
 <link rel="shortcut icon" href="#">
 </head>
+<script type="text/javascript">
+
+$(document).on('click','#btnInsert', function(e){
+	
+	const name = $("#name").val().trim();
+	const title = $("#title").val().trim();
+	const content = $("#content").val().trim();
+	const codeType = $("#codeType option:selected").val();
+	
+	const num = 0;
+	const str = "";
+	
+	if(name === ''){
+		alert('이름을 입력해주세요.');
+		return;
+	}
+	if(title === ''){
+		alert('제목을 입력해주세요.');
+		return;
+	}
+	if(content === ''){
+		alert('내용을 입력해주세요.');
+		return;
+	}
+	
+	var yn = confirm("게시글을 등록하시겠습니까?");
+	if(yn){	
+		$.ajax({
+			url : "./freeBoardInsertPro.ino",
+			data : {
+					
+					codeType : $("#codeType option:selected").val(),
+					name : $("#name").val(),
+					title : $("#title").val(),
+					content : $("#content").val()
+			},
+			
+			success : function(data){
+				
+				if(data != null){
+					getNum();
+					alert('게시글 작성 완료');
+					
+					
+					var result = confirm('메인화면으로 이동하시겠습니까?');
+					if(result){
+						location.href ='./main.ino';
+					}else{
+						location.href ='./freeBoardDetail.ino?num='+str;
+					} 
+				}
+			}
+			
+	})
+}
+});
+</script>
 <body>
 	<div>
 		<h1>자유게시판</h1>
@@ -23,6 +80,7 @@
 	<hr style="width: 600px">
 
 	<form id = "frm1" action="./freeBoardInsertPro.ino" method ="POST" accept-charset="utf-8">
+	<input type="hidden" id="num" value="${freeBoardDto.num }" />
 		<table border="1">
 			<tbody>
 				<tr>
@@ -66,60 +124,4 @@
 
 
 </body>
-
-<script type="text/javascript">
-
-$(document).on('click','#btnInsert', function(e){
-	
-	const name = $("#name").val().trim();
-	const title = $("#title").val().trim();
-	const content = $("#content").val().trim();
-	const codeType = $("#codeType option:selected").val();
-	
-	if(name === ''){
-		alert('이름을 입력해주세요.');
-		return;
-	}
-	if(title === ''){
-		alert('제목을 입력해주세요.');
-		return;
-	}
-	if(content === ''){
-		alert('내용을 입력해주세요.');
-		return;
-	}
-	
-	var yn = confirm("게시글을 등록하시겠습니까?");
-	if(yn){	
-		$.ajax({
-			url : "./freeBoardInsertPro.ino",
-			data : {
-					
-					codeType : $("#codeType option:selected").val(),
-					name : $("#name").val(),
-					title : $("#title").val(),
-					content : $("#content").val()
-			},
-			
-			success : function(data){
-				console.log(data);
-				
-				if(data != null){
-					
-					alert('게시글 작성 완료');
-				
-					
-					var result = confirm('메인화면으로 이동하시겠습니까?');
-					if(result){
-						location.href ='./main.ino';
-					}else{
-						location.href ='./freeBoardDetail.ino';
-					} 
-				}
-			}
-			
-	})
-}
-});
-</script>
 </html>

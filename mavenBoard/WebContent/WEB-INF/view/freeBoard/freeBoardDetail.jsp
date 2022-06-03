@@ -6,7 +6,33 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글 상세 보기</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.js"></script>
 </head>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		
+		function setType(){
+		const codeType = document.getElementById("codeType").value;
+			if(codeType =='자유'){
+			
+				$('#c01').attr('selected','selected');
+		
+			}else if(codeType =='익명'){
+				
+				$('#c02').attr('selected','selected');
+			
+			}else{
+				$('#c03').attr('selected','selected');
+			}			
+			
+		}
+		setType();
+		
+		});
+
+</script>
 <body>
 
 	<div>
@@ -19,15 +45,16 @@
 
 	<form name="insertForm">
 		<input type="hidden" name="num" value="${freeBoardDto.num }" />
+		<input type="hidden" id="codeType" value="${freeBoardDto.codeType }" />
 		<table border="1">
 			<tbody>
 				<tr>
 					<td style="width: 150px;" align="center">타입 :</td>
 					<td style="width: 400px;">
-						<select id="codeType">
-							<option value="01">자유</option>
-							<option value="02">익명</option>
-							<option value="03">QnA</option>
+						<select id="code">
+							<option value="01" id="c01">자유</option>
+							<option value="02" id="c02">익명</option>
+							<option value="03" id="c03">QnA</option>
 						</select>
 					</td>
 				</tr>
@@ -82,8 +109,4 @@
 		</div> --%>
 
 </body>
-<script type="text/javascript">
-
-
-</script>
 </html>

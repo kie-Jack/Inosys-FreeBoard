@@ -44,11 +44,12 @@ public class FreeBoardController {
 	@RequestMapping("/freeBoardInsertPro.ino")
 	public String freeBoardInsertPro( HttpServletRequest request, FreeBoardDto dto){
 		System.out.println("::::::::: 입력받은 데이터 :::::::::"+dto);
-		freeBoardService.freeBoardInsertPro(dto);
 		
 		dto.setNum(freeBoardService.getNewNum());
+		freeBoardService.freeBoardInsertPro(dto);
+		
 		System.out.println("------------------------------최종 입력전데이터---------------------------"+dto);
-		return "forward:/freeBoardDetail.ino?num="+dto.getNum();
+		return "boardMain";
 	}
 	
 
