@@ -2,6 +2,9 @@ package ino.web.freeBoard.service;
 
 import ino.web.freeBoard.dto.FreeBoardDto;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -19,8 +22,8 @@ public class FreeBoardService {
 	}
 
 
-	public void freeBoardInsertPro(FreeBoardDto dto){
-		sqlSessionTemplate.insert("freeBoardInsertPro",dto);
+	public void freeBoardInsertPro(HashMap<String,Object> map){
+		sqlSessionTemplate.insert("freeBoardInsertPro",map);
 	}
 
 	public FreeBoardDto getDetailByNum(int num){
@@ -35,9 +38,13 @@ public class FreeBoardService {
 		sqlSessionTemplate.update("freeBoardModify", dto);
 	}
 
-	public void FreeBoardDelete (int num) {
-		sqlSessionTemplate.delete("freeBoardDelete", num);
+	public void FreeBoardDelete (HashMap<String,Object> map) {
+		sqlSessionTemplate.delete("freeBoardDelete", map);
 
+	}
+	public void FreeBoardDeleteMultiple(List<Integer> valueArr) {
+		sqlSessionTemplate.delete("freeBoardDeleteMultiple", valueArr);
+		
 	}
 
 }

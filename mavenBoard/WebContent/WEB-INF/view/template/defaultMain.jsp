@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Inosys Sample Web Homepage</title>
 </head>
 <body>
 	<div id="bodyAll" align="center" style="width: 800px;">

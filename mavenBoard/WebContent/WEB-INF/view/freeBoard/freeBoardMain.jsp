@@ -5,10 +5,68 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Inosys Sample Web Hompage</title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <link rel="shortcut icon" href="#">
 </head>
+<script type="text/javascript">
+
+	$(function(){
+		var checkObj = document.getElementsByName("RowCheck");
+		var rowCnt = checkObj.length;
+		
+		$("input[name='allCheck']").click(function(){
+			var chk_listArr = $("input[name='RowCheck']");
+			for(var i = 0; i < chk_listArr.length; i++){
+				chk_listArr[i].checked = this.checked;
+			}
+		});
+		$("input[name='RowCheck']").click(function(){
+			if($("input[name='RowCheck']:checked").length == rowCnt){
+				$("input[name='allCheck']")[0].checked = true;
+			}else{	
+				$("input[name='allCheck']")[0].checked = false;
+			}
+		});
+	
+	});
+ 	function deleteValue(){
+		var valueArr = new Array();
+		const list = $("input[name='RowCheck']");
+		for(var i = 0; i < list.length; i++){
+			if(list[i].checked){   //선택되어잇으면 배열에 저장
+				valueArr.push(list[i].value);
+				console.log("배열값 = "+valueArr);
+			}
+		}
+		if(valueArr.length == 0){
+			alert("선택된 글이 없습니다");
+		}else{
+			var chk = confirm("정말 삭제하시겠습니까?");
+			if(chk){
+				
+			$.ajax({
+				url : "./freeBoardDeleteMultiple.ino",
+				data : {
+					valueArr : valueArr
+				},
+				success: function(data){
+					console.log(data);
+					if(data.status == "SUCCESS"){
+						alert(data.message);
+						location.replace("./main.ino");
+					}else{
+						alert(data.message);
+						location.reload();
+					}
+				}
+				
+			});
+			}
+		}
+	  } 
+	
+</script>
 <body>
 
 	<div>
@@ -22,11 +80,12 @@
 		<table border="1">
 			<thead>
 				<tr>
-					<td style="width: 55px; padding-left: 30px;" align="center">타입</td>
-					<td style="width: 50px; padding-left: 10px;" align="center">글번호</td>
-					<td style="width: 125px;" align="center">글제목</td>
-					<td style="width: 48px; padding-left: 50px;" align="center">글쓴이</td>
-					<td style="width: 100px; padding-left: 95px;" align="center">작성일시</td>
+					<th scope="col"><input id="allCheck" type="checkbox" name="allCheck"/></th>
+					<th scope="col" style="width: 55px; padding-left: 30px;" align="center">타입</th>
+					<th scope="col" style="width: 50px; padding-left: 10px;" align="center">글번호</th>
+					<th scope="col" style="width: 125px;" align="center">글제목</th>
+					<th scope="col" style="width: 48px; padding-left: 50px;" align="center">글쓴이</th>
+					<th scope="col" style="width: 100px; padding-left: 95px;" align="center">작성일시</th>
 				</tr>
 			</thead>
 		</table>
@@ -35,9 +94,10 @@
 
 	<div>
 		<table border="1">
-			<tbody id="tb" name="tb">
+			<tbody id="tb">
 					<c:forEach var="dto" items="${freeBoardList }">
 						<tr>
+							<td><input name="RowCheck" type="checkbox" value="${dto.num }"/></td>
 							<td style="width: 55px; padding-left: 30px;" align="center">${dto.codeType }</td>
 							<td style="width: 50px; padding-left: 10px;" align="center">${dto.num }</td>
 							<td style="width: 125px;" align="center"><a href="./freeBoardDetail.ino?num=${dto.num }">${dto.title }</a></td>
@@ -47,6 +107,7 @@
 					</c:forEach>
 			</tbody>
 		</table>
+		<input style="margin-top: 10px; float: right;" type="button" value="선택항목 삭제" class="btn_checkedDel" onclick="deleteValue();">
 	</div>
 
 </body>

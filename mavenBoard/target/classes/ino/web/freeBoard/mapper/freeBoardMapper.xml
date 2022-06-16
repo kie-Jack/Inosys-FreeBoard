@@ -18,7 +18,7 @@
 	NUM, NAME, TITLE, CONTENT, TO_CHAR(REGDATE , 'YYYY/MM/DD') AS REGDATE FROM FREEBOARD ORDER BY NUM	
 	</select>
 
-	<insert id="freeBoardInsertPro" parameterType="freeBoardDto">
+	<insert id="freeBoardInsertPro" parameterType="hashMap">
 		INSERT INTO FREEBOARD(CODE_TYPE,NUM, TITLE, NAME, REGDATE, CONTENT)
 		VALUES(#{codeType},FREEBOARDNUM_SEQ.NEXTVAL, #{title}, #{name}, SYSDATE, #{content})
 	</insert>
@@ -41,17 +41,25 @@
 	<update id="freeBoardModify" parameterType="freeBoardDto">
 		UPDATE FREEBOARD
 		SET TITLE = #{title}
-				, CONTENT = #{content}
+			, CONTENT = #{content}
 		WHERE NUM = #{num}
 
 	</update>
 
-	<update id="freeBoardDelete" parameterType="int">
+	<delete id="freeBoardDelete" parameterType="hashMap">
 		DELETE FROM FREEBOARD
 		WHERE NUM
 		= #{num}
 
-	</update>
+	</delete>
+	
+	<delete id="freeBoardDeleteMultiple" parameterType="ArrayList">
+		DELETE FROM FREEBOARD
+		WHERE NUM IN
+		<foreach item="num" collection="list" open="(" separator="," close=")">
+			 #{num}
+		</foreach>
+	</delete>
 
 	<resultMap type="freeBoardDto" id="mapping_freeboardlist">
 		<result property="codeType" column="CODE_TYPE"/>

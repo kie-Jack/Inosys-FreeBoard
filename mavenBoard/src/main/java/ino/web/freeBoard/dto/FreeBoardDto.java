@@ -1,5 +1,7 @@
 package ino.web.freeBoard.dto;
 
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
 
 @Alias("freeBoardDto")
@@ -12,6 +14,7 @@ public class FreeBoardDto {
 	private String regdate;
 	private String content;
 	private int readcnt;
+	
 
 	public FreeBoardDto() {}
 

@@ -16,14 +16,10 @@
 <script type="text/javascript">
 
 $(document).on('click','#btnInsert', function(e){
-	
 	const name = $("#name").val().trim();
 	const title = $("#title").val().trim();
 	const content = $("#content").val().trim();
 	const codeType = $("#codeType option:selected").val();
-	
-	const num = 0;
-	const str = "";
 	
 	if(name === ''){
 		alert('이름을 입력해주세요.');
@@ -43,31 +39,33 @@ $(document).on('click','#btnInsert', function(e){
 		$.ajax({
 			url : "./freeBoardInsertPro.ino",
 			data : {
-					
 					codeType : $("#codeType option:selected").val(),
 					name : $("#name").val(),
 					title : $("#title").val(),
 					content : $("#content").val()
 			},
-			
 			success : function(data){
-				
-				if(data != null){
-					getNum();
-					alert('게시글 작성 완료');
-					
-					
+				console.log(data.message);
+				if(data.status == "SUCCESS"){
+					alert(data.message);
 					var result = confirm('메인화면으로 이동하시겠습니까?');
 					if(result){
 						location.href ='./main.ino';
 					}else{
-						location.href ='./freeBoardDetail.ino?num='+str;
-					} 
+						location.href = './freeBoardDetail.ino?num='+data;
+					}
+					
+				}else{
+					alert(data.message);
+					location.href = './freeBoardInsert.ino';
+					
 				}
 			}
 			
+			
 	})
-}
+}			
+				
 });
 </script>
 <body>
@@ -80,7 +78,7 @@ $(document).on('click','#btnInsert', function(e){
 	<hr style="width: 600px">
 
 	<form id = "frm1" action="./freeBoardInsertPro.ino" method ="POST" accept-charset="utf-8">
-	<input type="hidden" id="num" value="${freeBoardDto.num }" />
+	<input type = "hidden" id = "num" value ="${freeBoardDto.num} }" />
 		<table border="1">
 			<tbody>
 				<tr>
@@ -111,7 +109,7 @@ $(document).on('click','#btnInsert', function(e){
 					<td></td>
 					<td align="right">
 					<input type="button" value="글쓰기" id = "btnInsert">
-					<input type="button" value="다시쓰기" onclick="reset()">
+					<input type="button" value="다시쓰기" id = "btnReset" onclick="reset()">
 					<input type="button" value="취소" onclick="location.href='javascript:history.back()'">
 					&nbsp;&nbsp;&nbsp;
 					</td>
