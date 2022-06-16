@@ -54,7 +54,8 @@
 					if(data.status == "SUCCESS"){
 						alert(data.message);
 						location.replace("./main.ino");
-					}else{
+						
+					}else if(data.status == "FAILURE"){
 						alert(data.message);
 						location.reload();
 					}
@@ -91,8 +92,8 @@
 					},
 					success : function(data){
 						
-						if(data != null){
-							alert('게시글 수정 완료');
+						if(data.status == "SUCCESS"){
+							alert(data.message);
 							
 							var result = confirm('메인화면으로 이동하시겠습니까?');
 							if(result){
@@ -100,6 +101,9 @@
 							}else{
 								location.href = './freeBoardDetail.ino?num='+data;
 							}
+						}else if(data.status == "FAILURE"){
+							alert(data.message);
+							location.reload();
 						}
 					},
 					error : function(request, status, error){

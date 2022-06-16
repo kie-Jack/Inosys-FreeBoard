@@ -55,7 +55,8 @@
 					if(data.status == "SUCCESS"){
 						alert(data.message);
 						location.replace("./main.ino");
-					}else{
+						
+					}else if(data.status == "FAILURE"){
 						alert(data.message);
 						location.reload();
 					}

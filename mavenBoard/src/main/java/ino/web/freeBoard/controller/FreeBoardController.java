@@ -57,9 +57,12 @@ public class FreeBoardController {
 
 		}catch(Exception e) {
 			map.put("message", e.getMessage());
+			map.put("status", "FAILURE");
 			return map;
 		}
-		map.put("message","게시글 작성 완료");
+		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
+			map.put("message", "게시글 수정 완료");
+		}
 		/*System.out.println("------------------------------최종 입력전데이터---------------------------"+dto);*/
 		return map;
 	}
@@ -75,18 +78,22 @@ public class FreeBoardController {
 	
 	@RequestMapping("/freeBoardModify.ino")
 	@ResponseBody
-	public ModelAndView freeBoardModify(HttpServletRequest request, FreeBoardDto dto, int num){
-		ModelAndView mv = null;
+	public HashMap<String, Object> freeBoardModify(HttpServletRequest request, FreeBoardDto dto){
 		
+		HashMap<String,Object> map = new HashMap<String,Object>();
 		try {
 			
 			freeBoardService.freeBoardModify(dto);
-		
-			mv = new ModelAndView("freeBoardDetail", "freeBoardDto", freeBoardService.getDetailByNum(num));
+			map.put("dto", dto);
+			map.put("status", "SUCCESS");
 		}catch(Exception e) {
-			e.printStackTrace();
+			map.put("message", e.getMessage());
+			map.put("status", "FAILURE");
 		}
-		return mv;
+		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
+		map.put("message", "게시글 수정 완료");
+		}
+		return map;
 	}
 
 
@@ -101,9 +108,12 @@ public class FreeBoardController {
 			map.put("status", "SUCCESS");
 		}catch(Exception e) {
 			map.put("message", e.getMessage());
+			map.put("status", "FAILURE");
 			return map;
 		}
-			map.put("message", "게시물 삭제 완료");
+		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
+			map.put("message", "게시글 수정 완료");
+		}
 		return map;
 	}
 	
@@ -122,9 +132,12 @@ public class FreeBoardController {
 		
 		}catch(Exception e) {
 			map.put("message", e.getMessage());
+			map.put("status", "FAILURE");
 			return map;
 		}
-			map.put("message", "게시물 삭제 완료");
+		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
+			map.put("message", "게시글 수정 완료");
+		}
 		return map;
 	}
 }

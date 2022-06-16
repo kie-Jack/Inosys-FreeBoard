@@ -38,7 +38,7 @@
 		FROM FREEBOARD
 	</select>
 
-	<update id="freeBoardModify" parameterType="freeBoardDto">
+	<update id="freeBoardModify" parameterType="hashMap">
 		UPDATE FREEBOARD
 		SET TITLE = #{title}
 			, CONTENT = #{content}

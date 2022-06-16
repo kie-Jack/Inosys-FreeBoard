@@ -55,7 +55,7 @@ $(document).on('click','#btnInsert', function(e){
 						location.href = './freeBoardDetail.ino?num='+data;
 					}
 					
-				}else{
+				}else if(data.status == "FAILURE"){
 					alert(data.message);
 					location.href = './freeBoardInsert.ino';
 					
