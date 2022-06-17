@@ -99,7 +99,7 @@
 							if(result){
 								location.href ='./main.ino';
 							}else{
-								location.href = './freeBoardDetail.ino?num='+data;
+								location.href = './freeBoardDetail.ino?num='+data.num;
 							}
 						}else if(data.status == "FAILURE"){
 							alert(data.message);

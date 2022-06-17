@@ -3,7 +3,6 @@ package ino.web.freeBoard.controller;
 import ino.web.freeBoard.dto.FreeBoardDto; 
 import ino.web.freeBoard.service.FreeBoardService;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,12 +55,12 @@ public class FreeBoardController {
 			map.put("status", "SUCCESS");
 
 		}catch(Exception e) {
-			map.put("message", e.getMessage());
 			map.put("status", "FAILURE");
+			map.put("message", e.getMessage());
 			return map;
 		}
 		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
-			map.put("message", "게시글 수정 완료");
+			map.put("message", "게시글 작성 완료");
 		}
 		/*System.out.println("------------------------------최종 입력전데이터---------------------------"+dto);*/
 		return map;
@@ -81,14 +80,16 @@ public class FreeBoardController {
 	public HashMap<String, Object> freeBoardModify(HttpServletRequest request, FreeBoardDto dto){
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
+		int num = dto.getNum();
 		try {
 			
 			freeBoardService.freeBoardModify(dto);
 			map.put("dto", dto);
+			map.put("num", num);
 			map.put("status", "SUCCESS");
 		}catch(Exception e) {
-			map.put("message", e.getMessage());
 			map.put("status", "FAILURE");
+			map.put("message", e.getMessage());
 		}
 		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
 		map.put("message", "게시글 수정 완료");
@@ -107,12 +108,12 @@ public class FreeBoardController {
 			map.put("num", params);
 			map.put("status", "SUCCESS");
 		}catch(Exception e) {
-			map.put("message", e.getMessage());
 			map.put("status", "FAILURE");
+			map.put("message", e.getMessage());
 			return map;
 		}
 		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
-			map.put("message", "게시글 수정 완료");
+			map.put("message", "게시글 삭제 완료");
 		}
 		return map;
 	}
@@ -131,12 +132,12 @@ public class FreeBoardController {
 			map.put("status", "SUCCESS");
 		
 		}catch(Exception e) {
-			map.put("message", e.getMessage());
 			map.put("status", "FAILURE");
+			map.put("message", e.getMessage());
 			return map;
 		}
 		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
-			map.put("message", "게시글 수정 완료");
+			map.put("message", "게시글 삭제 완료");
 		}
 		return map;
 	}
