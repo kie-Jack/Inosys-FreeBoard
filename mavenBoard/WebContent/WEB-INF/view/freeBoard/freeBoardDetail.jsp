@@ -5,114 +5,92 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>글 상세 보기</title>
+<title>Inosys Sample Web DetailPage</title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.js"></script>
-<link rel="shortcut icon" href="#">
 </head>
 <script type="text/javascript">
-
-	$(document).ready(function(){
-		
-		function setType(){
-		const codeType = document.getElementById("codeType").value;
-			if(codeType =='자유'){
-			
-				$('#c01').attr('selected','selected');
-		
-			}else if(codeType =='익명'){
-				
-				$('#c02').attr('selected','selected');
-			
-			}else{
-				$('#c03').attr('selected','selected');
-			}			
-			
-		}
-		
-		setType();
-		
-		});
+$(document).ready(function(){
 	
-		$(document).on("click","#delete_btn", function(){
-			var yn = confirm("정말 삭제하시겠습니까?");
-			if(yn){
-				delItem();
-				
-			}
+		function getCodeType(){
+			const codeType = document.getElementById("codeType").value;
+			
+				if(codeType =='자유'){
+					$('#code1').attr('selected','selected');
+				}else if(codeType =='익명'){
+					$('#code2').attr('selected','selected');
+				}else{
+					$('#code3').attr('selected','selected');
+				}
+		}
+		getCodeType();
 		});
 		
-		function delItem(){
-			
-			$.ajax({
-				url : "./freeBoardDelete.ino",
-				type: 'POST',
-				data : {
-					num : $("#num").val()
-				},
-				success: function(data){
-					if(data.status == "SUCCESS"){
-						alert(data.message);
-						location.replace("./main.ino");
-						
-					}else if(data.status == "FAILURE"){
-						alert(data.message);
-						location.reload();
-					}
-				}/* ,
-				error : function(request, status, error){
-					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-				} */
-			});
-		}
-		$(document).on("click","#modify_btn", function(){
+		$(document).on("click","#btnModify", function(){
+			const num = $("#num").val();
 			const title = $("#title").val();
 			const content = $("#content").val();
-			const num = $("#num").val();
 			
 			if(title === ''){
-				alert('제목을 입력해주세요.');
-				document.frm1.title.focus();
+				alert("제목을 입력해주세요.");
 				return;
 			}
 			if(content === ''){
-				alert('내용을 입력해주세요.');
-				document.frm1.content.focus();
+				alert("내용을 입력해주세요.");
 				return;
 			}
 			
-			var yn = confirm("게시글을 수정하시겠습니까?");
-			if(yn){	
-				$.ajax({
-					url : "./freeBoardModify.ino",
-					data : {
-							num : $("#num").val(),
-							title : $("#title").val(),
-							content : $("#content").val()
-					},
-					success : function(data){
+			var yn = confirm("게시물을 이대로 수정하시겠습니까?");
+			
+			if(yn){
+			$.ajax({
+				url : "./freeBoardModify.ino",
+				data : {
+					num : $("#num").val(),
+					title : $("#title").val(),
+					content : $("#content").val()
+				},
+				success : function(data){
+					if(data.status){
+						alert("게시물이 수정 되었습니다.");
+						var after = confirm("메인화면으로 가시겠습니까?");
 						
-						if(data.status == "SUCCESS"){
-							alert(data.message);
-							
-							var result = confirm('메인화면으로 이동하시겠습니까?');
-							if(result){
-								location.href ='./main.ino';
-							}else{
-								location.href = './freeBoardDetail.ino?num='+data.num;
-							}
-						}else if(data.status == "FAILURE"){
-							alert(data.message);
-							location.reload();
+						if(after){
+							location.href = './main.ino';
+						}else{
+							location.href = './freeBoardDetail.ino?num='+data.num;
 						}
-					},
-					error : function(request, status, error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					}else if(data.status = false){
+						alert(data.message);
 					}
-					
-			})
-		}
+				}
+			});
+			}
+		}); 
+		$(document).on("click","#btnDelete", function(){
+			var yn = confirm("정말 게시글을 삭제 하시겠습니까?");
+			if(yn){
+				deleteOne();
+			}
 		});
+		function deleteOne(){
+			$.ajax({
+				url : "./freeBoardDelete.ino",
+				data : {
+					num : $("#num").val()
+				},
+				success : function(data){
+					if(data.status){
+						alert("게시물이 삭제되었습니다.");
+						location.replace('./main.ino');
+					}else if(data.status = false){
+						alert(data.message);
+					}
+				}
+			});
+		}
+		 
+	
 </script>
 <body>
 
@@ -123,7 +101,6 @@
 		<a href="./main.ino">리스트로</a>
 	</div>
 	<hr style="width: 600px">
-	<form id = "frm1" name="insertForm">
 		<input type="hidden" id="codeType" value="${freeBoardDto.codeType }" />
 		<input type="hidden" id="num" value="${freeBoardDto.num }" />
 		<table border="1">
@@ -131,32 +108,32 @@
 				<tr>
 					<td style="width: 150px;" align="center">타입 :</td>
 					<td style="width: 400px;">
-						<select id="code">
-							<option value="01" id="c01">자유</option>
-							<option value="02" id="c02">익명</option>
-							<option value="03" id="c03">QnA</option>
+						<select id="codeType">
+							<option id= "code1" value="01">자유</option>
+							<option id= "code2" value="02">익명</option>
+							<option id= "code3" value="03">QnA</option>
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<td style="width: 150px;"align="center">이름 :</td>
-					<td style="width: 400px;"><input type="text" id = "name" name="name" value="${freeBoardDto.name }" readonly/></td>
+					<td style="width: 400px;"><input type="text" name="name" id="name" value="${freeBoardDto.name }" readonly/></td>
 				</tr>
 				<tr>
 					<td style="width: 150px;"align="center">제목 :</td>
-					<td style="width: 400px;"><input type="text" id = "title" name="title"  value="${freeBoardDto.title }"/></td>
+					<td style="width: 400px;"><input type="text" name="title" id="title"  value="${freeBoardDto.title }"/></td>
 				</tr>
 				<tr>
 					<td style="width: 150px;"align="center">내용 :</td>
-					<td style="width: 400px;"><textarea id = "content" name="content" rows="25" cols="65"  >${freeBoardDto.content }</textarea></td>
+					<td style="width: 400px;"><textarea name="content" id="content" rows="25" cols="65"  >${freeBoardDto.content }</textarea></td>
 				</tr>
 			</tbody>
 			<tfoot>
 				<tr>
 					<td></td>
 					<td align="right">
-					<input type="button" value="수정" id = "modify_btn">
-					<input type="button" value="삭제" id = "delete_btn" >
+					<input type="button" value="수정" id="btnModify">
+					<input type="button" value="삭제" id="btnDelete">
 					<input type="button" value="취소" onclick="location.href='./main.ino'">
 					&nbsp;&nbsp;&nbsp;
 					</td>
@@ -164,7 +141,6 @@
 			</tfoot>
 		</table>
 
-	</form>
 
 
 <%-- 	<input type="hidden" name="num" value="${freeBoardDto.num }" />

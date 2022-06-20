@@ -5,11 +5,7 @@
 
 <mapper namespace="ino.web.freeBoard.mapper.FreeBoardMapper">
 
-<!--  
-	SELECT DECODE(CODE_TYPE, '01','자유','02','익명','03','QnA')CODE_TYPE,
-	 NUM, NAME, TITLE, CONTENT, TO_CHAR(REGDATE , 'YYYY/MM/DD') AS REGDATE FROM FREEBOARD
--->
-	<select id="freeBoardGetList" resultMap="mapping_freeboardlist" > <!-- resultType="ino.web.board.dto.BoardDto" -->
+	<select id="freeBoardGetList" resultMap="mapping_freeboardlist" > 
 		SELECT CASE WHEN CODE_TYPE = '01' THEN '자유' 
 					WHEN CODE_TYPE = '02' THEN '익명'
 					WHEN CODE_TYPE = '03' THEN 'QnA'
@@ -38,7 +34,7 @@
 		FROM FREEBOARD
 	</select>
 
-	<update id="freeBoardModify" parameterType="hashMap">
+	<update id="freeBoardModify" parameterType="freeBoardDto">
 		UPDATE FREEBOARD
 		SET TITLE = #{title}
 			, CONTENT = #{content}
@@ -46,14 +42,14 @@
 
 	</update>
 
-	<delete id="freeBoardDelete" parameterType="hashMap">
+	<delete id="freeBoardDelete" parameterType="int">
 		DELETE FROM FREEBOARD
 		WHERE NUM
 		= #{num}
 
 	</delete>
 	
-	<delete id="freeBoardDeleteMultiple" parameterType="ArrayList">
+	<delete id="freeBoardMultiDelete" parameterType="ArrayList">
 		DELETE FROM FREEBOARD
 		WHERE NUM IN
 		<foreach item="num" collection="list" open="(" separator="," close=")">

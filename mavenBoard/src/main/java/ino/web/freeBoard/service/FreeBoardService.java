@@ -2,8 +2,6 @@ package ino.web.freeBoard.service;
 
 import ino.web.freeBoard.dto.FreeBoardDto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,8 +20,8 @@ public class FreeBoardService {
 	}
 
 
-	public void freeBoardInsertPro(HashMap<String,Object> map){
-		sqlSessionTemplate.insert("freeBoardInsertPro",map);
+	public void freeBoardInsertPro(HashMap<String,Object> vals){
+		sqlSessionTemplate.insert("freeBoardInsertPro",vals);
 	}
 
 	public FreeBoardDto getDetailByNum(int num){
@@ -38,13 +36,13 @@ public class FreeBoardService {
 		sqlSessionTemplate.update("freeBoardModify", dto);
 	}
 
-	public void FreeBoardDelete (HashMap<String,Object> map) {
-		sqlSessionTemplate.delete("freeBoardDelete", map);
+	public void FreeBoardDelete (Integer num) {
+		sqlSessionTemplate.delete("freeBoardDelete", num);
 
 	}
-	public void FreeBoardDeleteMultiple(List<Integer> valueArr) {
-		sqlSessionTemplate.delete("freeBoardDeleteMultiple", valueArr);
-		
+	
+	public void FreeBoardMultiDelete(List<Integer> valueArr) {
+		sqlSessionTemplate.delete("freeBoardMultiDelete", valueArr);
 	}
 
 }

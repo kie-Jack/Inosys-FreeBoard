@@ -1,6 +1,6 @@
 package ino.web.freeBoard.controller;
 
-import ino.web.freeBoard.dto.FreeBoardDto; 
+import ino.web.freeBoard.dto.FreeBoardDto;
 import ino.web.freeBoard.service.FreeBoardService;
 
 import java.util.HashMap;
@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-
-
 @Controller
 public class FreeBoardController {
+
 	@Autowired
 	private FreeBoardService freeBoardService;
 
@@ -34,111 +33,105 @@ public class FreeBoardController {
 	
 	@RequestMapping("/freeBoardInsert.ino")
 	public String freeBoardInsert(){
-		
 		return "freeBoardInsert";
 	}
-	
-	
+
 	@RequestMapping("/freeBoardInsertPro.ino")
 	@ResponseBody
-	public HashMap<String,Object> freeBoardInsertPro( HttpServletRequest request, @RequestParam HashMap<String,Object> params){
-		/*System.out.println("::::::::: 입력받은 데이터 :::::::::"+dto);*/
-
+	public HashMap<String,Object> freeBoardInsertPro(HttpServletRequest request,@RequestParam HashMap<String,Object> vals){
+		HashMap<String,Object> map = new HashMap<String, Object>();
 		Integer newNum = 0;
-		HashMap<String,Object> map = new HashMap<>();
-		
 		try {
-		
-			freeBoardService.freeBoardInsertPro(params);
-			newNum = freeBoardService.getNewNum();
-			map.put("num", newNum);
-			map.put("status", "SUCCESS");
 
+			freeBoardService.freeBoardInsertPro(vals);
+			newNum = freeBoardService.getNewNum();
+			map.put("status", true);
+			map.put("num", newNum);
+			
 		}catch(Exception e) {
-			map.put("status", "FAILURE");
-			map.put("message", e.getMessage());
+			
+			map.put("message",e.getMessage());
+			map.put("status", false);
+			
 			return map;
 		}
-		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
-			map.put("message", "게시글 작성 완료");
-		}
-		/*System.out.println("------------------------------최종 입력전데이터---------------------------"+dto);*/
+		
 		return map;
 	}
-	
+
 	@RequestMapping("/freeBoardDetail.ino")
 	@ResponseBody
 	public ModelAndView freeBoardDetail(HttpServletRequest request, Integer num){
 		
-		ModelAndView mv  = new ModelAndView("freeBoardDetail", "freeBoardDto", freeBoardService.getDetailByNum(num));
+		ModelAndView mv = new ModelAndView("freeBoardDetail","freeBoardDto",freeBoardService.getDetailByNum(num));
 		
 		return mv;
 	}
-	
+
 	@RequestMapping("/freeBoardModify.ino")
 	@ResponseBody
-	public HashMap<String, Object> freeBoardModify(HttpServletRequest request, FreeBoardDto dto){
+	public HashMap<String,Object> freeBoardModify(HttpServletRequest request, FreeBoardDto dto){
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		int num = dto.getNum();
 		try {
-			
 			freeBoardService.freeBoardModify(dto);
-			map.put("dto", dto);
 			map.put("num", num);
-			map.put("status", "SUCCESS");
+			map.put("status", true);
+			
 		}catch(Exception e) {
-			map.put("status", "FAILURE");
+			
 			map.put("message", e.getMessage());
+			map.put("status", false);
+			
+			return map;
 		}
-		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
-		map.put("message", "게시글 수정 완료");
-		}
+		
 		return map;
 	}
 
 
 	@RequestMapping("/freeBoardDelete.ino")
 	@ResponseBody
-	public HashMap<String,Object> FreeBoardDelete(@RequestParam HashMap<String,Object> params){
-	
-		HashMap<String,Object> map = new HashMap<>();
+	public HashMap<String,Object> FreeBoardDelete(Integer num){
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
 		try {
-			freeBoardService.FreeBoardDelete(params);
-			map.put("num", params);
-			map.put("status", "SUCCESS");
+			
+			freeBoardService.FreeBoardDelete(num);
+			map.put("status", true);
+			map.put("num", num);
+			
 		}catch(Exception e) {
-			map.put("status", "FAILURE");
+			
+			map.put("status", false);
 			map.put("message", e.getMessage());
+			
 			return map;
 		}
-		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
-			map.put("message", "게시글 삭제 완료");
-		}
+		
 		return map;
 	}
 	
-	@RequestMapping("/freeBoardDeleteMultiple.ino")
+	@RequestMapping("/freeBoardMultiDelete.ino")
 	@ResponseBody
-	public HashMap<String,Object>  FreeBoardDeleteMultiple(@RequestParam(value="valueArr[]")List<Integer> valueArr) {
-		
-		HashMap<String,Object> map = new HashMap<>();
+	public HashMap<String,Object> FreeBoardMultiDelete(@RequestParam (value="valueArr[]")List<Integer> valueArr){
+		HashMap<String,Object> map = new HashMap<String,Object>();
 		try {
 			
-			System.out.println("선택된 넘값 배열"+valueArr);
+			map.put("status", true);
 			map.put("valueArr", valueArr);
-			freeBoardService.FreeBoardDeleteMultiple(valueArr);
-			
-			map.put("status", "SUCCESS");
+			freeBoardService.FreeBoardMultiDelete(valueArr);
 		
 		}catch(Exception e) {
-			map.put("status", "FAILURE");
+			
+			map.put("status", false);
 			map.put("message", e.getMessage());
+			
 			return map;
 		}
-		if(map.get("status") == "SUCCESS" && map.get("status") != "FAILURE") {
-			map.put("message", "게시글 삭제 완료");
-		}
+		
 		return map;
 	}
 }

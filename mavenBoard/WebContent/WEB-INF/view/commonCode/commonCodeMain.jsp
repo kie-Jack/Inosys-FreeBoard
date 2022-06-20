@@ -13,7 +13,6 @@
 <script type="text/javascript">
 
 </script>
-<link rel="shortcut icon" href="#">
 </head>
 <body>
 	<div>

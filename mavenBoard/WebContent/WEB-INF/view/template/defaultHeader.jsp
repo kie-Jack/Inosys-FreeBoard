@@ -4,8 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-<link rel="shortcut icon" href="#">
+<title>Inosys Sample Web HomePage</title>
 </head>
 <body>
 	<a href="./main.ino"><h1>Inosys Sample Web HomePage</h1></a>

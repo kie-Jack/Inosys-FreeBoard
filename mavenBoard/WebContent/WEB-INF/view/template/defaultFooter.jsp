@@ -5,13 +5,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-<link rel="shortcut icon" href="#">
 </head>
 <body>
 
 <br/><br/><br/><br/>
-	<div style="position : relative;  transform : translateY(-100%);">
 	Copyright inosys jmw
-	</div>
 </body>
 </html>
