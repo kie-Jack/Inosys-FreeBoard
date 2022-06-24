@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.JOptionPane;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.AlternativeJdkIdGenerator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,13 +24,38 @@ public class FreeBoardController {
 	private FreeBoardService freeBoardService;
 
 	@RequestMapping("/main.ino")
-	public ModelAndView main(HttpServletRequest request){
+	public ModelAndView main(@RequestParam HashMap<String,Object> val){
 		ModelAndView mav = new ModelAndView();
-		List<FreeBoardDto> list = freeBoardService.freeBoardList();
-
+		
+		List<FreeBoardDto> list = freeBoardService.freeBoardList(val);
 		mav.setViewName("boardMain");
 		mav.addObject("freeBoardList",list);
 		return mav;
+	}
+	
+	@RequestMapping("/getSearchList.ino")
+	@ResponseBody
+	public HashMap<String, Object> getSearchList(@RequestParam HashMap<String,Object> val){
+		
+		HashMap<String,Object> map = new HashMap<>();
+		
+		List<FreeBoardDto> list = freeBoardService.freeBoardList(val);
+			
+			map.put("list", list);
+			map.put("searchType", val.get("searchType"));
+			map.put("s_selectCode", val.get("s_selectCode"));
+			map.put("searchByKeyword", val.get("searchByKeyword"));
+			map.put("searchByNum", val.get("searchByNum"));
+			map.put("sDate", val.get("sDate"));
+			map.put("eDate", val.get("eDate"));
+			
+			System.out.println(list);
+			System.out.println("====================");
+			System.out.println(map.keySet());
+			System.out.println("====================");
+			System.out.println(map.values());
+		return map;
+	
 	}
 	
 	@RequestMapping("/freeBoardInsert.ino")

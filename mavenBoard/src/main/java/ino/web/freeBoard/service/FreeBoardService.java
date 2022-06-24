@@ -15,8 +15,18 @@ public class FreeBoardService {
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
 
-	public List<FreeBoardDto> freeBoardList(){
-		return sqlSessionTemplate.selectList("freeBoardGetList");
+	public List<FreeBoardDto> freeBoardList(HashMap<String,Object>val){
+		HashMap<String,Object> map = new HashMap<>();
+		
+		
+		map.put("searchType", val.get("searchType"));
+		map.put("s_selectCode", val.get("s_selectCode"));
+		map.put("searchByKeyword", val.get("searchByKeyword"));
+		map.put("searchByNum", val.get("searchByNum"));
+		map.put("sDate", val.get("sDate"));
+		map.put("eDate", val.get("eDate"));
+		
+		return sqlSessionTemplate.selectList("freeBoardGetList",map);
 	}
 
 
@@ -44,5 +54,7 @@ public class FreeBoardService {
 	public void FreeBoardMultiDelete(List<Integer> valueArr) {
 		sqlSessionTemplate.delete("freeBoardMultiDelete", valueArr);
 	}
+
+
 
 }

@@ -70,10 +70,10 @@
 	<div style="width:650px;" align="right">
 		<a href="./freeBoardInsert.ino">글쓰기</a>
 	</div>
-	
-	<div>
+	<form id = "searchForm" name = "searchForm" onsubmit="return false;" method="GET">
+	<div id = "divSearch" name = "divSearch" class = "divSearch">
 		<select name="searchType" id="searchType" onchange="getSearchType();">
-			<option value="0">전체</option>
+			<option value="0" selected="selected">전체</option>
 			<option value="1">타입</option> <!-- selectbox -->
 			<option value="2">글쓴이</option> <!-- input type text -->
 			<option value="3">글제목</option> <!-- input type text -->
@@ -82,18 +82,22 @@
 			<option value="6">기간</option> <!-- input type text X 2 검색버튼 클릭시 숫자인지 체크할것,자릿수 8자리 ex)20220620 -->
 		</select>
 			<select name="s_selectCode" id="s_selectCode">
-				<option id= "code1" value="01">자유</option>
-				<option id= "code2" value="02">익명</option>
-				<option id= "code3" value="03">QnA</option>
+				<option value="01">자유</option>
+				<option value="02">익명</option>
+				<option value="03">QnA</option>
 			</select>
-			<input type="text" name="searchByName" id="searchByName" placeholder="글쓴이로 검색"/>
-			<input type="text" name="searchByTitle" id="searchByTitle" placeholder="글 제목으로 검색"/>
-			<input type="text" name="searchByContent" id="searchByContent" placeholder="글 내용으로 검색"/>
-			<input type="text" name="searchByNum" id="searchByNum" placeholder="글 번호로 검색" numberOnly/>
-			<input type="text" name="searchByDate" id="searchByDate" maxlength='8' placeholder="ex.20201127 부터" numberOnly/>
-			<input type="text" name="searchByDate2" id="searchByDate2" maxlength='8' placeholder="ex.20220620 까지" numberOnly/>
+			
+			<input type = "text" name = "searchByKeyword" id = "searchByKeyword"/>
+			<input type = "text" name = "searchByNum" id = "searchByNum" placeholder="글 번호로 검색"/>
+			
+			<div class = "divDate" id = "divDate" name = "divDate">
+			<input type="text" name="sDate" id="sDate" maxlength='8' placeholder="ex.20201127"/>
+			~
+			<input type="text" name="eDate" id="eDate" maxlength='8' placeholder="ex.20220620"/>
+			</div>
 		<button name="btnSearch" id="btnSearch">검색</button>
 	</div>
+	</form>
 	<hr style="width: 600px;">
 	<div style="padding-bottom: 10px;">
 		<table border="1">
@@ -112,7 +116,7 @@
 	<hr style="width: 600px;">
 
 	<div>
-		<table border="1">
+		<table id="listTable" border="1">
 			<tbody id="tb" name="tb">
 					<c:forEach var="dto" items="${freeBoardList }">
 						<tr>
@@ -132,94 +136,110 @@
 </body>
 <script>
 function getSearchType(){
-	const selBox = document.getElementById("searchType").value;
-console.log(selBox);
-	if(selBox == 1){
+	
+	const selBox = $("#searchType option:selected").val();
+	
+	 if(selBox == 1){
 		$("#s_selectCode").show();
 	}else{
 		$("#s_selectCode").hide();
 	}
 	
-	if(selBox == 2){
-		$("#searchByName").show();
+	if(selBox == 2 || selBox == 3 || selBox == 4){
+		$("#searchByKeyword").show();
 	}else{
-		$("#searchByName").hide();
+		$("#searchByKeyword").hide();
 	}
 	
-	if(selBox == 3){
-		$("#searchByTitle").show();
-	}else{
-		$("#searchByTitle").hide();
-	}
-	if(selBox == 4){
-		$("#searchByContent").show();
-	}else{
-		$("#searchByContent").hide();
-	}
 	if(selBox == 5){
 		$("#searchByNum").show();
 	}else{
 		$("#searchByNum").hide();
 	}
 	if(selBox == 6){
-		$("#searchByDate").show();
-		$("#searchByDate2").show();
+		$("#divDate").show();
 	}else{
-		$("#searchByDate").hide();
-		$("#searchByDate2").hide();
-	}
+		$("#divDate").hide();
+	} 
 }
 getSearchType();	
+
 $(document).on('click','#btnSearch', function(e){
 
 	const selBox = document.getElementById("searchType").value;
 	
 	const codeType = $("#s_selectCode option:selected").val();
-	const name = $("#searchByName").val();
-	const title = $("#searchByTitle").val();
-	const content = $("#searchByContent").val();
 	const num = $("#searchByNum").val().trim();
-	const regdate = $("#searchByDate").val().trim();
-	const regdate2 = $("#searchByDate2").val().trim();
-	if(selBox == 1){
-		$.ajax({
-			url : './freeBoardlist.ino',
-			data : {
-				codeType : codeType
-			},
-			success : function(data){
-				
-				
-			}
-		})
-		
+	var sDate = $("#sDate").val();
+	var eDate = $("#eDate").val();
+	
+	if(selBox == 2 || selBox == 3 || selBox == 4){
+		if($("#searchByKeyword").val() === ''){
+			alert("아무것도 입력되지 않았습니다.");
+			selBox = 0;
+			return;
+		}
 	}
 	if(selBox == 5){
 		if(num === ''){
 			alert("아무것도 입력되지 않았습니다.");
+			selBox = 0;
 			return;
-	}
+		}
 		if(isNaN(num)){
 			alert("숫자만 입력가능합니다.");
-		}
-	}
-	if(selBox == 6){
-		if(regdate === '' || regdate2 === ''){
-			alert("두칸 모두 입력되어야 합니다.");
+			selBox = 0;
 			return;
 		}
-		if(isNaN(regdate) || isNaN(regdate2)){
+	}
+	if(selBox == '6'){
+		if(isNaN(sDate) || isNaN(eDate)){
 			alert("숫자만 입력가능합니다.");
-			return;
+			location.href = "./main.ino";
 		}
-		if(regdate > regdate2){
-			alert("처음 날짜가 마지막 날짜보다 클 수 없습니다.")
+		if(sDate == '' || sDate.length != 8 || eDate =='' || eDate.length != 8){
+			alert("8자리 모두 입력되어야합니다");
+			location.href = "./main.ino";
 		}
+		
 	}
-	/* $("input:text[numberOnly]").on("keyup", function() {
+		/* $("input:text[numberOnly]").on("keyup", function() {
 	      $(this).val($(this).val().replace(/[^0-9]/g,""));					입력되는값 바로 받아서 숫자만 남기는 함수
 	   }); */
 	
+	$.ajax({
+		url : './getSearchList.ino',
+		data : $('#searchForm').serialize(),
+		async : true,
+		success : function(data){
+			$('#listTable > tbody').empty();
+			if((data.list).length>=1){
+					(data.list).forEach(function(item){
+						str = '<tr>'
+						str += "<td style='width: 55px; padding-left: 5px;' align='center' ><input name='RowCheck'type='checkbox'value='" + item.num+"''/></td>";
+						str += "<td style='width: 55px; padding-left: 30px;' align='center'>" + item.codeType + "</td>";
+						str += "<td style='width: 50px; padding-left: 10px;' align='center'>" + item.num + "</td>";
+						str += "<td style='width: 125px;'  align='center'><a href='./freeBoardDetail.ino?num=" + item.num + "'>"+ item.title + "</td>";
+						str += "<td style='width: 48px; padding-left: 50px;' align='center'>" + item.name + "</td>";
+						str += "<td style='width: 100px; padding-left: 95px;' align='center'>" + item.regdate + "</td>";
+						str += "</tr>"
+							$('#listTable').append(str);
+					});
+					
+			}else{
+				alert("검색어와 일치하는 글이 없습니다.");
+				location.href="./main.ino";
+				
+			}
+		},
+		error:function(){
+			alert("검색타입에 맞지 않습니다 타입에 맞게 입력해주세요 \n ex)기간=8자리숫자");
+			location.href="./main.ino";
+			
+		}
+	});   
+	   
+	   
 });
 </script>
 </html>
