@@ -4,7 +4,7 @@ public class Pagination {
 
 	private int page = 1;
 	private int endPage;
-	private int pageSize = 10;
+	private int pageSize = 5; //at first it was 10
 	private int blockSize = 5;
 	private String url;
 	

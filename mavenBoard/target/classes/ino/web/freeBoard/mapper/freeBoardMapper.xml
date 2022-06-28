@@ -5,7 +5,7 @@
 
 <mapper namespace="ino.web.freeBoard.mapper.FreeBoardMapper">
 
-	<select id="freeBoardGetList" resultMap="mapping_freeboardlist"> 
+	<select id="freeBoardGetList" resultMap="mapping_freeboardlist" > 
 		SELECT CASE WHEN CODE_TYPE = '01' THEN '자유' 
 					WHEN CODE_TYPE = '02' THEN '익명'
 					WHEN CODE_TYPE = '03' THEN 'QnA'
@@ -13,22 +13,22 @@
 					END AS CODE_TYPE,
 	NUM, NAME, TITLE, CONTENT, TO_CHAR(REGDATE , 'YYYY/MM/DD') AS REGDATE FROM FREEBOARD WHERE 1=1
 	<choose>
-		<when test = "searchType != null and searchType == 1">
-			AND CODE_TYPE LIKE #{s_selectCode}
+		<when test = "searchType == 1">
+			AND CODE_TYPE = #{s_selectCode}
 		</when>
-		<when test = "searchType != null and searchType == 2">
+		<when test = "searchType == 2">
 			AND NAME LIKE '%'||#{searchByKeyword}||'%'
 		</when>
-		<when test = "searchType != null and searchType == 3">
+		<when test = "searchType == 3">
 			AND TITLE LIKE '%'||#{searchByKeyword}||'%'
 		</when>
-		<when test = "searchType != null and searchType == 4">
+		<when test = "searchType == 4">
 			AND CONTENT LIKE '%'||#{searchByKeyword}||'%'
 		</when>
-		<when test = "searchType != null and searchType == 5">
+		<when test = "searchType == 5">
 			AND NUM = #{searchByNum}
 		</when>
-		<when test = "searchType != null and searchType == 6">
+		<when test = "searchType == 6">
 			AND TO_CHAR(REGDATE, 'YYYYMMDD') BETWEEN #{sDate} AND #{eDate}
 		</when>
 	</choose> 

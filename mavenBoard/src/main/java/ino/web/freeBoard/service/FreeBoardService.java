@@ -16,17 +16,8 @@ public class FreeBoardService {
 	private SqlSessionTemplate sqlSessionTemplate;
 
 	public List<FreeBoardDto> freeBoardList(HashMap<String,Object>val){
-		HashMap<String,Object> map = new HashMap<>();
 		
-		
-		map.put("searchType", val.get("searchType"));
-		map.put("s_selectCode", val.get("s_selectCode"));
-		map.put("searchByKeyword", val.get("searchByKeyword"));
-		map.put("searchByNum", val.get("searchByNum"));
-		map.put("sDate", val.get("sDate"));
-		map.put("eDate", val.get("eDate"));
-		
-		return sqlSessionTemplate.selectList("freeBoardGetList",map);
+		return sqlSessionTemplate.selectList("freeBoardGetList",val);
 	}
 
 

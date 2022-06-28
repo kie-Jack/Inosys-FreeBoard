@@ -81,16 +81,16 @@
 			<option value="5">글번호</option> <!-- input type text 검색버튼 클릭시 숫자인지 체크할것, -->
 			<option value="6">기간</option> <!-- input type text X 2 검색버튼 클릭시 숫자인지 체크할것,자릿수 8자리 ex)20220620 -->
 		</select>
-			<select name="s_selectCode" id="s_selectCode">
+			<select name="s_selectCode" id="s_selectCode" style ="display : none;">
 				<option value="01">자유</option>
 				<option value="02">익명</option>
 				<option value="03">QnA</option>
 			</select>
 			
-			<input type = "text" name = "searchByKeyword" id = "searchByKeyword"/>
-			<input type = "text" name = "searchByNum" id = "searchByNum" placeholder="글 번호로 검색"/>
+			<input type = "text" name = "searchByKeyword" id = "searchByKeyword" style ="display : none;"/>
+			<input type = "text" name = "searchByNum" id = "searchByNum" style ="display : none;" placeholder="글 번호로 검색"/>
 			
-			<div class = "divDate" id = "divDate" name = "divDate">
+			<div class = "divDate" id = "divDate" style ="display : none;"name = "divDate">
 			<input type="text" name="sDate" id="sDate" maxlength='8' placeholder="ex.20201127"/>
 			~
 			<input type="text" name="eDate" id="eDate" maxlength='8' placeholder="ex.20220620"/>
@@ -104,11 +104,11 @@
 			<thead>
 				<tr>
 					<th scope="col"><input type="checkbox" name="allCheck"/></th>
-					<th style="width: 55px; padding-left: 30px;" align="center">타입</th>
+					<th style="width: 55px; padding-left: 10px;" align="center">타입</th>
 					<th style="width: 50px; padding-left: 10px;" align="center">글번호</th>
 					<th style="width: 125px;" align="center">글제목</th>
 					<th style="width: 48px; padding-left: 50px;" align="center">글쓴이</th>
-					<th style="width: 100px; padding-left: 95px;" align="center">작성일시</th>
+					<th style="width: 100px; padding-left: 50px;" align="center">작성일시</th>
 				</tr>
 			</thead>
 		</table>
@@ -120,16 +120,18 @@
 			<tbody id="tb" name="tb">
 					<c:forEach var="dto" items="${freeBoardList }">
 						<tr>
-							<td><input name="RowCheck" type="checkbox" value="${dto.num }"/></td>
-							<td style="width: 55px; padding-left: 30px;" align="center">${dto.codeType }</td>
-							<td style="width: 50px; padding-left: 10px;" align="center">${dto.num }</td>
-							<td style="width: 125px;  align="center"><a href="./freeBoardDetail.ino?num=${dto.num }">${dto.title }</a></td>
-							<td style="width: 48px; padding-left: 50px;" align="center">${dto.name }</td>
-							<td style="width: 100px; padding-left: 95px;" align="center">${dto.regdate }</td>
+							<td scope="col"><input name="RowCheck" type="checkbox" value="${dto.num}"/></td>
+							<td style="width: 55px; padding-left: 10px;" align="center">${dto.codeType}</td>
+							<td style="width: 50px; padding-left: 10px;" align="center">${dto.num}</td>
+							<td style="width: 125px;" align="center"><a href="./freeBoardDetail.ino?num=${dto.num}">${dto.title}</a></td>
+							<td style="width: 48px; padding-left: 20px;" align="center">${dto.name}</td>
+							<td style="width: 100px; padding-left: 50px;" align="center">${dto.regdate}</td>
 						<tr>
 					</c:forEach>
 			</tbody>
 		</table>
+		<input type="hidden" name="page" id="page" value="1">
+		<input type="hidden" name="pageSize" id="pageSize" value="5">
 		<input type="button" value="선택 항목(들) 삭제" class="deleteChecked" style="margin-top: 10px; float: right;"  onclick="deleteChecked();">
 	</div>
 
@@ -138,35 +140,39 @@
 function getSearchType(){
 	
 	const selBox = $("#searchType option:selected").val();
+	var selCode = document.getElementById("s_selectCode");
+	var serKey = document.getElementById("searchByKeyword");
+	var serNum = document.getElementById("searchByNum");
+	var divDate = document.getElementById("divDate");
 	
 	 if(selBox == 1){
-		$("#s_selectCode").show();
+		selCode.style.display = 'inline';
 	}else{
-		$("#s_selectCode").hide();
+		selCode.style.display = 'none';
 	}
 	
 	if(selBox == 2 || selBox == 3 || selBox == 4){
-		$("#searchByKeyword").show();
+		serKey.style.display = 'inline';
 	}else{
-		$("#searchByKeyword").hide();
+		serKey.style.display = 'none';
 	}
 	
 	if(selBox == 5){
-		$("#searchByNum").show();
+		serNum.style.display = 'inline';
 	}else{
-		$("#searchByNum").hide();
+		serNum.style.display = 'none';
 	}
 	if(selBox == 6){
-		$("#divDate").show();
+		divDate.style.display = 'inline';
 	}else{
-		$("#divDate").hide();
+		divDate.style.display = 'none';
 	} 
 }
 getSearchType();	
 
 $(document).on('click','#btnSearch', function(e){
 
-	const selBox = document.getElementById("searchType").value;
+	const selBox = $("#searchType").val();
 	
 	const codeType = $("#s_selectCode option:selected").val();
 	const num = $("#searchByNum").val().trim();
@@ -176,30 +182,27 @@ $(document).on('click','#btnSearch', function(e){
 	if(selBox == 2 || selBox == 3 || selBox == 4){
 		if($("#searchByKeyword").val() === ''){
 			alert("아무것도 입력되지 않았습니다.");
-			selBox = 0;
 			return;
 		}
 	}
 	if(selBox == 5){
 		if(num === ''){
 			alert("아무것도 입력되지 않았습니다.");
-			selBox = 0;
 			return;
 		}
 		if(isNaN(num)){
 			alert("숫자만 입력가능합니다.");
-			selBox = 0;
 			return;
 		}
 	}
 	if(selBox == '6'){
 		if(isNaN(sDate) || isNaN(eDate)){
 			alert("숫자만 입력가능합니다.");
-			location.href = "./main.ino";
+			return;
 		}
-		if(sDate == '' || sDate.length != 8 || eDate =='' || eDate.length != 8){
+		if(sDate.length != 8 || eDate.length != 8){
 			alert("8자리 모두 입력되어야합니다");
-			location.href = "./main.ino";
+			return;
 		}
 		
 	}
@@ -212,29 +215,32 @@ $(document).on('click','#btnSearch', function(e){
 		data : $('#searchForm').serialize(),
 		async : true,
 		success : function(data){
-			$('#listTable > tbody').empty();
+			
+			console.log(data.list);
+			
+			var str = "<tr>"
+			
 			if((data.list).length>=1){
+			$('#listTable > tbody').empty();
 					(data.list).forEach(function(item){
-						str = '<tr>'
-						str += "<td style='width: 55px; padding-left: 5px;' align='center' ><input name='RowCheck'type='checkbox'value='" + item.num+"''/></td>";
-						str += "<td style='width: 55px; padding-left: 30px;' align='center'>" + item.codeType + "</td>";
+						str += "<td scope='col'><input name='RowCheck' type='checkbox' value="+ item.num +"/></td>";
+						str += "<td style='width: 55px; padding-left: 10px;' align='center'>" + item.codeType + "</td>";
 						str += "<td style='width: 50px; padding-left: 10px;' align='center'>" + item.num + "</td>";
 						str += "<td style='width: 125px;'  align='center'><a href='./freeBoardDetail.ino?num=" + item.num + "'>"+ item.title + "</td>";
-						str += "<td style='width: 48px; padding-left: 50px;' align='center'>" + item.name + "</td>";
-						str += "<td style='width: 100px; padding-left: 95px;' align='center'>" + item.regdate + "</td>";
+						str += "<td style='width: 48px; padding-left: 20px;' align='center'>" + item.name + "</td>";
+						str += "<td style='width: 100px; padding-left: 50px;' align='center'>" + item.regdate + "</td>";
 						str += "</tr>"
-							$('#listTable').append(str);
 					});
+							 $('#listTable').append(str);
 					
 			}else{
 				alert("검색어와 일치하는 글이 없습니다.");
-				location.href="./main.ino";
-				
+				return;
 			}
 		},
 		error:function(){
-			alert("검색타입에 맞지 않습니다 타입에 맞게 입력해주세요 \n ex)기간=8자리숫자");
-			location.href="./main.ino";
+			alert("검색어를 다시 확인해주세요.");
+				return;
 			
 		}
 	});   
